@@ -31,12 +31,12 @@ def add(numbers):
 # Subtract function -- subtract one number from another
 
 
-# Subtract function -- subtract one number from another
 def subtract(numbers):
     result = numbers[0]
     for num in numbers[1:]:
         result -= num
     return result
+
 # Multiply function -- multiply a list of numbers
 
 
@@ -76,29 +76,51 @@ operations = {
     "%": modulo
 }
 
-num1 = int(input("What is the first number?: "))
-numbers = [num1]
+all_operations = []
+previous_result = None
 
 while True:
-    next_number = input("Enter the next number or type '=' to calculate: ")
+    num1 = int(input("What is the first number?: "))
 
-    if next_number.lower() == '=':
+    if previous_result is not None:
+        print(f"Previous result: {previous_result}")
+
+    numbers = [num1]
+
+    while True:
+        for symbol in operations:
+            print(symbol)
+        operation = input("Pick an operation from the line above: ")
+        print("You picked:", operation)
+
+        if operation not in operations:
+            print("Invalid operator")
+            break
+
+        next_number = input("Enter the next number to calculate: ")
+
+        if next_number.lower() == '=':
+            break
+
+        try:
+            numbers.append(int(next_number))
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+
+        result = operations[operation](numbers)
+        print(f"The result so far is {result}")
+
+        all_operations.append(f"{operation} {next_number} ")
+
+        previous_result = result
+
+        continue_calculation = input("Do you want to continue? (yes/no): ")
+        if continue_calculation.lower() != 'yes':
+            break
+
+    end_program = input("Do you want to end the program? (yes/no): ")
+    if end_program.lower() == 'yes':
         break
 
-    try:
-        numbers.append(int(next_number))
-    except ValueError:
-        print("Invalid input. Please enter a valid number.")
-
-for symbol in operations:
-    print(symbol)
-operation = input("Pick an operation from the line above: ")
-print("You picked:", operation)
-
-if operation not in operations:
-    print("Invalid operator")
-else:
-    result = operations[operation](numbers)
-
 print(
-    f"The result of {num1} {operation} {', '.join(map(str, numbers[1:]))} is = {result}")
+    f"The final result of {num1} {' '.join(all_operations)} is = {result}")
